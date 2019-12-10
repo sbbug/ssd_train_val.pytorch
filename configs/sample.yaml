@@ -1,0 +1,44 @@
+OUTPUT_DIR: "./checkpoint/Exp-1"
+DEVICE: True
+DEVICE_ID: ('2')
+
+MODEL:
+  NAME: 'VGG'
+  BACKBONE: 'vgg16_reducedfc.pth'
+  SAVE_MODEL_FRE: 5000
+  TRAINED_MODEL: '/home/shw/code/ZhiXing/checkpoint/Exp-120000.pth'
+  TOP_K: 5
+  CONFIDENCE_THRE: 0.01
+  VAL_GAP: 1000
+  FEATURE_MAPS: [38, 19, 10, 5, 3, 1]
+  MIN_DIM: 300
+  ASPECT_RATIOS: [[2], [2, 3], [2, 3], [2, 3], [2], [2]]
+  VARIANCE: [0.1, 0.2]
+  CLIP: True
+  MIN_SIZES: [30, 60, 111, 162, 213, 264]
+  MAX_SIZES: [60, 111, 162, 213, 264, 315]
+  STEPS: [8, 16, 32, 64, 100, 300]
+
+DATALOADER:
+  NUM_WORKERS: 4
+  BATCH_SIZE: 16
+
+SOLVER:
+  LOSS: 'softmax'
+  OPTIMIZER_NAME: 'Adam'
+  MAX_EPOCHS: 30000
+  BASE_LR: 0.0006
+  WEIGHT_DECAY: 0.0005
+
+  EVAL_PERIOD: 1
+  PRINT_FREQ: 10
+
+SCHEDULER:
+  NAME: 'StepLR'
+  STEP: []
+  GAMMA: 0.2
+
+TEST:
+  BATCH_SIZE: 8
+  SET_TYPE: 'test'
+  RESULT: '/home/shw/code/ZhiXing/checkpoint/Exp-1/'
