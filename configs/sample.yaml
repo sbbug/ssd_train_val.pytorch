@@ -26,7 +26,8 @@ DATALOADER:
 
 DATASETS:
   NUM_CLS: 2
-
+  ROOT: '/data/shw/dolphinDetect'
+  NAME: 'JT001'
 SOLVER:
   LOSS: 'softmax'
   OPTIMIZER_NAME: 'Adam'
