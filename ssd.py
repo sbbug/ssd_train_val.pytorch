@@ -121,7 +121,7 @@ class SSD(nn.Module):
     def load_weights(self, base_file):
         other, ext = os.path.splitext(base_file)
         if ext == '.pkl' or '.pth':
-            print('Loading weights into state dict...')
+            print('Loading backbone_weights into state dict...')
             self.load_state_dict(torch.load(base_file,
                                  map_location=lambda storage, loc: storage))
             print('Finished!')

@@ -2,7 +2,7 @@ from __future__ import print_function
 import torch
 import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
-from data import VOC_ROOT, VOCAnnotationTransform, VOCDetection, BaseTransform
+from data import  VOCAnnotationTransform, VOCDetection, BaseTransform
 from data import VOC_CLASSES as labelmap
 from ssd import build_ssd
 import sys
@@ -108,8 +108,8 @@ def write_voc_results_file(all_boxes, dataset,opt=None):
 
 def do_python_eval(output_dir='output', use_07=True,opt=None):
 
-    annopath = os.path.join(opt.DATASETS.ROOT, 'ZH001', 'Annotations', '%s.xml')
-    imgsetpath = os.path.join(opt.DATASETS.ROOT, 'ZH001', 'ImageSets', 'test.txt')
+    annopath = os.path.join(opt.DATASETS.ROOT, opt.DATASETS.NAME, 'Annotations', '%s.xml')
+    imgsetpath = os.path.join(opt.DATASETS.ROOT, opt.DATASETS.NAME, 'ImageSets', 'test.txt')
 
     cachedir = os.path.join(opt.TEST.RESULT, 'annotations_cache')
     aps = []

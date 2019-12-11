@@ -16,9 +16,9 @@ _C.MODEL.BACKBONE = "VGG"
 _C.MODEL.NAME = "SSD"
 _C.MODEL.STRIDE = 2
 _C.MODEL.RESUM = False
-_C.MODEL.SAVE_FOLDER = "./weights"
+_C.MODEL.BACKBONE_WEIGHTS = "./backbone_weights"
 _C.MODEL.SAVE_MODEL_FRE = 5
-_C.MODEL.TRAINED_MODEL = "/home/shw/code/ZhiXing/checkpoint/Exp-1Voc.pth"
+_C.MODEL.TRAINED_MODEL = ""
 _C.MODEL.TOP_K = 5
 _C.MODEL.CONFIDENCE_THRE = 0.01
 _C.MODEL.VAL_GAP = 1000
@@ -58,14 +58,11 @@ _C.DATASETS = CN()
 # List of the dataset names for training, as present in paths_catalog.py
 # _C.DATASETS.NAME = ''
 # Setup storage directory for dataset
-_C.DATASETS.ROOT = '/data/shw/zhixing/'
-_C.DATASETS.NAME = "ZX"
-_C.DATASETS.TRAIN_DIR = 'Train_train'
-_C.DATASETS.VAL_DIR = 'Train_val'
-_C.DATASETS.TOTAL_TRAIN_DIR = 'Train_Folder'
+_C.DATASETS.ROOT = '/data/shw/dolphinDetect'
+_C.DATASETS.NAME = "JT001"
 _C.DATASETS.MIN_DIM = 300
 _C.DATASETS.TEST_DIR = 'Test'
-_C.DATASETS.NUM_CLS = 5
+_C.DATASETS.NUM_CLS = 1
 _C.DATASETS.MEANS = (104, 117, 123)
 # -----------------------------------------------------------------------------
 # DataLoader

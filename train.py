@@ -14,20 +14,19 @@ from trainers import weights_init
 
 
 def train(opt):
+    train_dataset = VOCDetection(
+        transform=SSDAugmentation(opt.DATASETS.MIN_DIM, opt.DATASETS.MEANS), opt=opt)
 
-    train_dataset = VOCDetection(root=opt.DATASETS.ROOT,
-                           transform=SSDAugmentation(opt.DATASETS.MIN_DIM,opt.DATASETS.MEANS))
-
-    test_dataset = VOCDetection(opt.DATASETS.ROOT, ['test'],
-                           BaseTransform(300, opt.DATASETS.MEANS),
-                           VOCAnnotationTransform())
+    test_dataset = VOCDetection(['test'],
+                                BaseTransform(300, opt.DATASETS.MEANS),
+                                VOCAnnotationTransform(),opt=opt)
 
     ssd_net = build_ssd('train', opt.DATASETS.MIN_DIM, opt.DATASETS.NUM_CLS)
     net = ssd_net
     # logger
     logger = make_logger("project", opt.OUTPUT_DIR, 'log')
 
-    if len(opt.DEVICE_ID)>1:
+    if len(opt.DEVICE_ID) > 1:
         net = torch.nn.DataParallel(ssd_net)
         cudnn.benchmark = True
 
@@ -35,7 +34,7 @@ def train(opt):
         print('Resuming training, loading {}...'.format(opt.MODEL.RESUM))
         ssd_net.load_weights(opt.MODEL.RESUM)
     else:
-        vgg_weights = torch.load(os.path.join(opt.MODEL.SAVE_FOLDER , opt.MODEL.BACKBONE))
+        vgg_weights = torch.load(os.path.join(opt.MODEL.BACKBONE_WEIGHTS, opt.MODEL.BACKBONE))
         print('Loading base network...')
         ssd_net.vgg.load_state_dict(vgg_weights)
 
@@ -43,8 +42,8 @@ def train(opt):
         net = net.cuda()
 
     if not opt.MODEL.RESUM:
-        print('Initializing weights...')
-        # initialize newly added layers' weights with xavier method
+        print('Initializing backbone_weights...')
+        # initialize newly added layers' backbone_weights with xavier method
         ssd_net.extras.apply(weights_init)
         ssd_net.loc.apply(weights_init)
         ssd_net.conf.apply(weights_init)
@@ -56,20 +55,13 @@ def train(opt):
     epoch_size = len(train_dataset) // opt.DATALOADER.BATCH_SIZE
 
     train_loader = data.DataLoader(train_dataset,
-                                   batch_size= opt.DATALOADER.BATCH_SIZE,
-                                   num_workers=opt.DATALOADER.NUM_WORKERS,
-                                   shuffle=True,
-                                   collate_fn=detection_collate,
-                                   pin_memory=True
-                                   )
-    test_loader = data.DataLoader(test_dataset,
                                    batch_size=opt.DATALOADER.BATCH_SIZE,
                                    num_workers=opt.DATALOADER.NUM_WORKERS,
                                    shuffle=True,
                                    collate_fn=detection_collate,
                                    pin_memory=True
                                    )
-    #device = torch.device("cuda")
+    # device = torch.device("cuda")
     trainer = Trainer(
         net,
         optimizer,
@@ -79,11 +71,11 @@ def train(opt):
         scheduler=None
     )
     trainer.run(
-               opt=opt,
-               train_loader=train_loader,
-               test_dataset=test_dataset,
-               epoch_size = epoch_size
-            )
+        opt=opt,
+        train_loader=train_loader,  # dataloader
+        test_dataset=test_dataset,  # dataset
+        epoch_size=epoch_size
+    )
 
 
 if __name__ == '__main__':
@@ -93,12 +85,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     from config import cfg as opt
+
     opt.merge_from_file(args.config)
     opt.freeze()
 
     if opt.DEVICE:
         os.environ['CUDA_VISIBLE_DEVICES'] = opt.DEVICE_ID
         num_gpus = len(opt.DEVICE_ID.split(','))
+
 
     if torch.cuda.is_available():
         if opt.DEVICE:
@@ -110,8 +104,9 @@ if __name__ == '__main__':
     else:
         torch.set_default_tensor_type('torch.FloatTensor')
 
-    if not os.path.exists(os.path.join(opt.OUTPUT_DIR,"weights")):
-        os.mkdir(os.path.join(opt.OUTPUT_DIR,"weights"))
-
+    if not os.path.exists(os.path.join(opt.OUTPUT_DIR)):
+        os.mkdir(os.path.join(opt.OUTPUT_DIR))
+    if not os.path.exists(os.path.join(opt.OUTPUT_DIR, "backbone_weights")):
+        os.mkdir(os.path.join(opt.OUTPUT_DIR, "backbone_weights"))
 
     train(opt)

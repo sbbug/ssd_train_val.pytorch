@@ -1,4 +1,4 @@
-from .voc0712 import VOCDetection, VOCAnnotationTransform, VOC_CLASSES, VOC_ROOT
+from .voc0712 import VOCDetection, VOCAnnotationTransform, VOC_CLASSES
 from .config import *
 import torch
 import cv2

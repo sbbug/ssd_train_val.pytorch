@@ -1,12 +1,13 @@
-OUTPUT_DIR: "./checkpoint/Exp-1"
+OUTPUT_DIR: "./checkpoint/Exp-2"
 DEVICE: True
-DEVICE_ID: ('2')
+DEVICE_ID: ('3')
 
 MODEL:
   NAME: 'VGG'
+  BACKBONE_WEIGHTS: "./backbone_weights"
   BACKBONE: 'vgg16_reducedfc.pth'
   SAVE_MODEL_FRE: 5000
-  TRAINED_MODEL: '/home/shw/code/ZhiXing/checkpoint/Exp-120000.pth'
+  TRAINED_MODEL: ''
   TOP_K: 5
   CONFIDENCE_THRE: 0.01
   VAL_GAP: 1000
@@ -20,8 +21,11 @@ MODEL:
   STEPS: [8, 16, 32, 64, 100, 300]
 
 DATALOADER:
-  NUM_WORKERS: 4
-  BATCH_SIZE: 16
+  NUM_WORKERS: 1
+  BATCH_SIZE: 4
+
+DATASETS:
+  NUM_CLS: 2
 
 SOLVER:
   LOSS: 'softmax'
@@ -39,6 +43,6 @@ SCHEDULER:
   GAMMA: 0.2
 
 TEST:
-  BATCH_SIZE: 8
+  BATCH_SIZE: 4
   SET_TYPE: 'test'
-  RESULT: '/home/shw/code/ZhiXing/checkpoint/Exp-1/'
+  RESULT: '/home/shw/code/ZhiXing/checkpoint/Exp-2/'

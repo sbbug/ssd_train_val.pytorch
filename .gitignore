@@ -8,4 +8,4 @@
 out
 gen
 demo
-weights
+backbone_weights
